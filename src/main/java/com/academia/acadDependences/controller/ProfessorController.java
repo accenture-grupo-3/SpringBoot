@@ -2,7 +2,9 @@ package com.academia.acadDependences.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,62 +15,59 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.academia.acadDependences.model.Professor;
+import com.academia.acadDependences.model.Professor;
+import com.academia.acadDependences.repository.ProfessorRepository;
 
 @RestController
 @RequestMapping("/professor")
 
 public class ProfessorController {
 
-	private List<Professor> professores = new ArrayList<Professor>();
+	@Autowired
+	private ProfessorRepository professorRepository;
+	private List<Professor> Professors = new ArrayList<Professor>();
+	
+	ProfessorController(ProfessorRepository professorRepository) {
+        this.professorRepository = professorRepository;
+    }
 
 	@GetMapping("/MostrarLista")
 	public List<Professor> viewProfessors() {
-		return professores;
+		return this.professorRepository.findAll();
 	}
 
 	@GetMapping("/procurarProfessor/{id}")
-	public Professor viewProfessor(@PathVariable("id") int id) {
-		Professor professor = null;
-		for (Professor al : professores) {
-			if (al.getId() == id)
-				professor = al;
+	public Optional<Professor> viewProfessor(@PathVariable("id") int id) {
+		return  this.professorRepository.findById(id);
 		}
-		return professor;
-	}
+
 
 	@PutMapping("/atualizar/{id}")
-	public List<Professor> atualizarProfessor(@PathVariable("id") int id, @RequestBody Professor professor) {
-		Professor al = null;
-		for (int i = 0;i<professores.size();i++ ) {
-			al = professores.get(i);
-			if (al.getId() == id) {
-			professores.set(i, professor);
-				//al = professor;
-			}
+	public void atualizarProfessor(@PathVariable("id") int id, @RequestBody Professor newProfessor) {
+		Optional<Professor> ProfessorFind = this.professorRepository.findById(id);
+		if (ProfessorFind.isPresent()) {
+			
+			
+			Professor professor = ProfessorFind.get();
+			professor.setName(newProfessor.getName());
+			professor.setCpf(newProfessor.getCpf());
+            professor.setIdade(newProfessor.getIdade());
+            professor.setSalario(newProfessor.getSalario());
+            professorRepository.save(professor);
 		}
-		return professores;
+		
 	}
 
 	@PostMapping("/create")
-	public void criarProfessor(@RequestBody Professor professor) {
-		professores.add(professor);
+	void criarProfessor(@RequestBody Professor professor) {
+		professorRepository.save(professor);
 
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public void delete(@PathVariable("id") int id) {
-		Professor a = null;
-		boolean encontrou = false;
-		for (Professor al : professores) {
-			if (al.getId() == id) {
-				encontrou = true;
-				a = al;
-			}
-		}
-		if (encontrou == true) {
-			professores.remove(a);
-		}
-
+	void delete(@PathVariable("id") int id) {
+	professorRepository.deleteById(id);
+	}
 	}
 
-}
+
