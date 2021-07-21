@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.academia.acadDependences.model.Aluno;
+import com.academia.acadDependences.model.Professor;
 import com.academia.acadDependences.repository.AlunoRepository;
 
 @RestController
@@ -41,7 +45,7 @@ public class AlunoController {
 
 
 	@PutMapping("/atualizar/{id}")
-	public void atualizarAluno(@PathVariable("id") int id, @RequestBody Aluno newaluno) {
+	public String atualizarAluno(@PathVariable("id") int id, @RequestBody Aluno newaluno) {
 		Optional<Aluno> alunoFind = this.alunoRepository.findById(id);
 		if (alunoFind.isPresent()) {
 			
@@ -52,19 +56,29 @@ public class AlunoController {
             aluno.setIdade(newaluno.getIdade());
             aluno.setCurso(newaluno.getCurso());
             alunoRepository.save(aluno);
+            return ("Aluno atualizado com sucesso!");
+		} else {
+			return ("Aluno nao encontrado!");
 		}
 		
 	}
 
 	@PostMapping("/create")
-	void criarAluno(@RequestBody Aluno aluno) {
+	void criarAluno(@Valid @RequestBody Aluno aluno) {
 		alunoRepository.save(aluno);
+		
 
 	}
 
 	@DeleteMapping("/delete/{id}")
-	void delete(@PathVariable("id") int id) {
-	alunoRepository.deleteById(id);
+	public String deletealuno(@PathVariable("id") int id) {
+		Optional<Aluno> alunoFind = this.alunoRepository.findById(id);
+		if (alunoFind.isPresent()) {
+		alunoRepository.deleteById(id);	
+		return ("Aluno Deletado com sucesso");
+		} else { 
+			return ("Aluno Nao Encontrado");
+		}
 	}
 
 }
