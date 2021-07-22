@@ -69,14 +69,7 @@ public class AlunoController {
 
 	@PostMapping("/create")
 	void criarAluno(@Valid @RequestBody Aluno aluno) {
-		
-		/*Optional<Curso> cursoFind = this.cursoRepository.findById(id);
-		if (cursoFind.isPresent()) {
-			aluno.setCurso(cursoFind.get());
-		}*/
 		alunoRepository.save(aluno);
-
-
 	}
 
 	@DeleteMapping("/delete/{id}")

@@ -1,6 +1,7 @@
 package com.academia.acadDependences.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,10 +39,9 @@ import lombok.ToString;
 public class Curso {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO) 
-	private int id;
-	
+	private int id;	
 	private String name;
-	
-	//@OneToMany( mappedBy = "curso")
-	//private List<Aluno> aluno = new ArrayList<Aluno>();
+	@OneToMany( mappedBy = "curso")
+	@JsonIgnore
+	private List<Aluno> aluno = new ArrayList<Aluno>();
 }

@@ -50,13 +50,11 @@ public class Aluno {
 	private int id;
 	@NotBlank(message = "O campo name é obrigatorio")
 	private String name;
-	//@NotBlank(message = "O campo cpf é obrigatorio" , groups = Aluno.class)
 	@Length(min = 11, max = 11 , message = "Cpf tem 11 digitos" )
 	private String cpf;
 	@Min(18)
 	private int idade;
 	@JoinColumn(name = "id_curso")
 	@ManyToOne
-	//@NotBlank(message =  "{curso.not.blank}")
 	private Curso curso;
 }
