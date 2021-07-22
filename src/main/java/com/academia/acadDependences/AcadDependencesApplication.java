@@ -11,6 +11,5 @@ public class AcadDependencesApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AcadDependencesApplication.class, args);
-		
 	}
 }

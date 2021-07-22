@@ -18,13 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.academia.acadDependences.model.Aluno;
+import com.academia.acadDependences.model.Curso;
 import com.academia.acadDependences.model.Professor;
 import com.academia.acadDependences.repository.AlunoRepository;
+import com.academia.acadDependences.repository.CursoRepository;
 
 @RestController
 @RequestMapping("/aluno")
 
 public class AlunoController {
+	@Autowired
+	private CursoRepository cursoRepository;
 	@Autowired
 	private AlunoRepository alunoRepository;
 	private List<Aluno> alunos = new ArrayList<Aluno>();
@@ -65,8 +69,13 @@ public class AlunoController {
 
 	@PostMapping("/create")
 	void criarAluno(@Valid @RequestBody Aluno aluno) {
-		alunoRepository.save(aluno);
 		
+		/*Optional<Curso> cursoFind = this.cursoRepository.findById(id);
+		if (cursoFind.isPresent()) {
+			aluno.setCurso(cursoFind.get());
+		}*/
+		alunoRepository.save(aluno);
+
 
 	}
 
@@ -80,5 +89,4 @@ public class AlunoController {
 			return ("Aluno Nao Encontrado");
 		}
 	}
-
 }
